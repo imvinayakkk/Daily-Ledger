@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0F172A">
+  <title>The Daily Ledger</title>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      --glass-bg: rgba(255, 255, 255, 0.12);
+      --glass-hero-bg: rgba(255, 255, 255, 0.18);
+      --glass-border: rgba(255, 255, 255, 0.22);
+      --text-main: #ffffff;
+      --text-sub: rgba(255, 255, 255, 0.7);
+      --accent-cyan: #38bdf8;
+      --accent-green: #4ade80;
+      --accent-amber: #fbbf24;
+      --accent-red: #f87171;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom) 16px;
+      overflow-x: hidden;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 390px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-top: 20px;
+      padding-bottom: 40px;
+    }
+
+    /* Glass Cards Base */
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    /* Header Bar */
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 18px;
+      border-radius: 30px;
+    }
+
+    .header-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: var(--text-sub);
+    }
+
+    .vault-pill {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent-cyan);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Hero Glass Card */
+    .hero-card {
+      background: var(--glass-hero-bg);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .hero-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-sub);
+      font-weight: 600;
+    }
+
+    .hero-amount {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      color: var(--text-main);
+    }
+
+    .pills-container {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .status-pill {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pill-green {
+      background: rgba(74, 222, 128, 0.15);
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      color: var(--accent-green);
+    }
+
+    .pill-red {
+      background: rgba(248, 113, 113, 0.15);
+      border: 1px solid rgba(248, 113, 113, 0.3);
+      color: var(--accent-red);
+    }
+
+    /* Input Form */
+    .input-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    input, select {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--glass-border);
+      color: var(--text-main);
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 15px;
+      outline: none;
+      backdrop-filter: blur(10px);
+    }
+
+    input[type="number"] {
+      width: 40%;
+    }
+
+    input[type="text"] {
+      width: 60%;
+    }
+
+    .btn-add {
+      background: var(--accent-cyan);
+      color: #0f172a;
+      border: none;
+      padding: 14px;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 15px;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 10px;
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+      transition: transform 0.1s ease;
+    }
+
+    .btn-add:active {
+      transform: scale(0.98);
+    }
+
+    /* History List */
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-sub);
+      margin-bottom: 10px;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .item-desc {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .item-amount {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent-amber);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Header -->
+    <div class="glass-card header-bar">
+      <span class="header-title">THE DAILY LEDGER</span>
+      <span class="vault-pill" id="savingsVault">Outings: ₹0</span>
+    </div>
+
+    <!-- Hero Card -->
+    <div class="glass-card hero-card">
+      <div class="hero-label">Today's Safe-to-Spend</div>
+      <div class="hero-amount" id="safeSpendDisplay">₹0</div>
+      
+      <div class="pills-container">
+        <span class="status-pill pill-green">🛡️ ₹20 Buffer Held</span>
+        <span class="status-pill pill-red" id="rolloverPill">⚠️ ₹0 Deducted</span>
+      </div>
+    </div>
+
+    <!-- Quick Log Form -->
+    <div class="glass-card">
+      <div class="section-title">Quick Log Expense</div>
+      <div class="input-group">
+        <input type="number" id="spendAmount" placeholder="₹ Amount" inputmode="decimal">
+        <input type="text" id="spendNote" placeholder="For what? (e.g., Coffee)">
+      </div>
+      <button class="btn-add" onclick="addExpense()">Add Spend</button>
+    </div>
+
+    <!-- Expense Logs Today -->
+    <div class="glass-card">
+      <div class="section-title">Today's Activity</div>
+      <div class="history-list" id="historyList">
+        <!-- Log Items Will Appear Here -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Logic Configuration
+    const BASE_DAILY = 240; // Base daily target (₹8000 / ~30 - Buffer/Outings)
+    const BUFFER = 20;
+
+    let appData = JSON.parse(localStorage.getItem("dailyLedgerData")) || {
+      todaySpend: 0,
+      yesterdayOverspend: 0,
+      outingsVault: 0,
+      logs: []
+    };
+
+    function updateUI() {
+      // Calculate today's limit after deducting yesterday's overspend
+      let safeSpend = BASE_DAILY - appData.yesterdayOverspend - appData.todaySpend;
+      
+      document.getElementById("safeSpendDisplay").innerText = `₹${Math.max(0, safeSpend)}`;
+      document.getElementById("rolloverPill").innerText = `⚠️ ₹${appData.yesterdayOverspend} Deducted`;
+      document.getElementById("savingsVault").innerText = `Outings: ₹${appData.outingsVault}`;
+
+      // Render Logs
+      const listEl = document.getElementById("historyList");
+      listEl.innerHTML = "";
+      if (appData.logs.length === 0) {
+        listEl.innerHTML = `<div style="text-align:center; color: var(--text-sub); font-size: 13px; padding: 10px;">No expenses added today yet.</div>`;
+      } else {
+        appData.logs.forEach((item) => {
+          listEl.innerHTML += `
+            <div class="history-item">
+              <span class="item-desc">${item.note}</span>
+              <span class="item-amount">-₹${item.amount}</span>
+            </div>
+          `;
+        });
+      }
+
+      // Save persistent state
+      localStorage.setItem("dailyLedgerData", JSON.stringify(appData));
+    }
+
+    function addExpense() {
+      const amountInput = document.getElementById("spendAmount");
+      const noteInput = document.getElementById("spendNote");
+
+      const amount = parseFloat(amountInput.value);
+      const note = noteInput.value.trim() || "General Spend";
+
+      if (!amount || amount <= 0) return;
+
+      appData.todaySpend += amount;
+      appData.logs.unshift({ amount, note, time: new Date().toLocaleTimeString() });
+
+      // If overspent today, calculate rollover deduction for tomorrow
+      let totalAllowed = BASE_DAILY - appData.yesterdayOverspend;
+      if (appData.todaySpend > totalAllowed) {
+        appData.nextDayDeduction = appData.todaySpend - totalAllowed;
+      }
+
+      amountInput.value = "";
+      noteInput.value = "";
+      updateUI();
+    }
+
+    // Initialize UI on load
+    updateUI();
+  </script>
+</body>
+</html>
